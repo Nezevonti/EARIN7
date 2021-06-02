@@ -196,14 +196,13 @@ void Neuron::GradientUpdate() {
 	//for each weigth
 	for (int i = 0; i < this->weights.size();i++) {
 		grad = this->inputs[i] * sigmoid_derivative(this->neuron_sum) * this->neuron_error * LEARING_RATE;
-		//std::cout << "g_w" << i << ":" << grad << " ";
 		//update weight
 		this->weights[i] -= grad;
 	}
 
 	//update bias
 	grad = sigmoid_derivative(this->neuron_sum) * this->neuron_error;
-	//std::cout << "g_b:" << grad << "\n";
+
 	this->bias -= grad;
 }
 
@@ -246,15 +245,13 @@ void Neuron::BackwardPass() {
 	}
 
 	double error_val = 0;
-	//std::cout << this->neuron_error << "\n";
 
 	for (int i = 0; i < this->weights.size(); i++) {
 		error_val = this->neuron_error * sigmoid_derivative(this->neuron_sum) * this->weights[i];
-		//std::cout << error_val << " ";
+
 		this->prev_layer->AddError(i, error_val);
 	}
 
-	//std::cout << "\n";
 	
 	/*
 	//for each of weights coming into the neuron
@@ -390,12 +387,6 @@ int main()
 	Layer middleLayer(5, &inputLayer, false);
 	Layer outputLayer(1, &middleLayer, true);
 
-	middleLayer.PrintWeights();
-	std::cout << "\n";
-	outputLayer.PrintWeights();
-	std::cout << "\n";
-
-
 	for (int i = 0; i < repeats*5; i++) {
 		
 		double expected;
@@ -405,6 +396,15 @@ int main()
 		/*
 		loss_avg.clear();
 		for (int j = 0; j < batch_size; j++) {
+
+			if (i % 5 == 0) {
+			//Select random value from the domain
+			tmp = (double)(rand() % 2000) / 100.0;
+			//round to x decimal places
+			tmp = roundf(tmp * divider_prec) / divider_prec;
+			//tmp = -6.4;
+			tmp = tmp - 10.0;
+			}
 
 			//Select random value from the domain
 			tmp = (double)(rand() % 2000) / 100.0;
@@ -428,15 +428,13 @@ int main()
 		}
 		*/
 		
-		if (i % 5 == 0) {
-			//Select random value from the domain
-			tmp = (double)(rand() % 2000) / 100.0;
-			//round to x decimal places
-			tmp = roundf(tmp * divider_prec) / divider_prec;
-			//tmp = -6.4;
-			tmp = tmp - 10.0;
-		}
 		
+		//Select random value from the domain
+		tmp = (double)(rand() % 2000) / 100.0;
+		//round to x decimal places
+		tmp = roundf(tmp * divider_prec) / divider_prec;
+		//tmp = -6.4;
+		tmp = tmp - 10.0;
 		
 		 
 		//Calculate the network estimate for given input
@@ -454,7 +452,7 @@ int main()
 		loss = pow((result - expected), 2.0);
 
 		//print all
-		if (!(i % 1)) {
+		if (!(i % 100)) {
 			std::cout << "x = " << tmp << " , f(x) = " << expected << ", net = " << result << " , loss = " << loss << "\n";
 		}
 		
@@ -468,13 +466,6 @@ int main()
 		middleLayer.GradientUpdate();
 
 	}
-	std::cout << "\n";
-	std::cout << "\n";
-	middleLayer.PrintWeights();
-	std::cout << "\n";
-	outputLayer.PrintWeights();
-	std::cout << "\n";
-	std::cout << "\n";
 
 	std::cout << "Training completed\n";
 	double test_f;
@@ -502,11 +493,3 @@ int main()
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
